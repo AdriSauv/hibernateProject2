@@ -1,0 +1,35 @@
+@charset "ISO-8859-1";
+main {
+	background: url('../img/bg.jpg') center/cover no-repeat;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.container-left,
+.container-right {
+    flex: 1;
+    text-align: center;
+}
+
+.container-left-button,
+.container-right-button {
+    margin: auto;
+}
+
+.container-left a,
+.container-right a {
+    transition: transform .4s;
+}
+
+.container-left a:hover,
+.container-right a:hover {
+    transform: scale(1.5);
+}

@@ -1,0 +1,14 @@
+@charset "ISO-8859-1";
+
+main {
+	background: url('../img/bg.jpg') center/cover no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+	width: 60%;
+	color: white;
+}
