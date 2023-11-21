@@ -1,35 +1,33 @@
 package org.eclipse.controller;
 
-import java.io.IOException;
+import java.io.*;
 
 import org.eclipse.dao.dao;
 import org.eclipse.model.Article;
 import org.eclipse.model.Categorie;
 import org.eclipse.model.Compte;
+import org.eclipse.model.Image;
 import org.eclipse.model.User;
 
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 /**
  * Servlet implementation class MyServlet
  */
+@MultipartConfig
 public class MyServlet extends HttpServlet implements Servlet {
 	private static final long serialVersionUID = 1L;
 	dao dao = new dao();
 
     public MyServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-
-	    if (session == null || session.getAttribute("userOK") == null) {
-	    	response.sendRedirect("connexion.jsp");
-	    }
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,11 +41,13 @@ public class MyServlet extends HttpServlet implements Servlet {
 			this.doAddCategorie(request, response);
 		} else if (flag.equalsIgnoreCase("addArticle")) {
 			this.doAddArticle(request, response);
+		} else if(flag.equalsIgnoreCase("deleteCategorie")) {
+			this.doDeleteCategorie(request, response);
 		}
 	}
 	
 	
-	public void doAddUserAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doAddUserAccount(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String prenom = request.getParameter("prenom");
 		String nom = request.getParameter("nom");
 		String numRue = request.getParameter("numRue");
@@ -69,7 +69,8 @@ public class MyServlet extends HttpServlet implements Servlet {
 		
 		dao.addUserAccount(user, compte);
 		
-		response.sendRedirect("connexion.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("connexion.jsp");
+	    dispatcher.forward(request, response);
 	}
 	
 	public void doLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -101,10 +102,43 @@ public class MyServlet extends HttpServlet implements Servlet {
 	    dispatcher.forward(request, response);
 	}
 
-	public void doAddArticle(HttpServletRequest request, HttpServletResponse response) {
-		String designation = request.getParameter("designation");
-		int pu = Integer.parseInt(request.getParameter("pu"));
-		int qty = Integer.parseInt(request.getParameter("qty"));
+	public void doAddArticle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    String designation = request.getParameter("designation");
+	    int pu = Integer.parseInt(request.getParameter("pu"));
+	    int qty = Integer.parseInt(request.getParameter("qty"));
+	    String idCatParam = request.getParameter("categorie");
+
+	    Part filePart = request.getPart("image");
+	    InputStream inputStream = filePart.getInputStream();
+	    byte[] imageData = inputStream.readAllBytes();
+
+	    int idCat = -1;
+	    if (idCatParam != null && !idCatParam.isEmpty()) {
+	        idCat = Integer.parseInt(idCatParam);
+	    }
+
+	    Categorie cat = dao.getCatById(idCat);
+
+	    if (cat != null) {
+	        Image image = new Image();
+	        image.setImage(imageData);
+
+	        Article article = new Article();
+	        article.setCat(cat);
+	        article.setDesignation(designation);
+	        article.setPu(pu);
+	        article.setQty(qty);
+	        article.setImage(image);
+
+	        dao.addArticle(article);
+
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("menuAdmin.jsp");
+	        dispatcher.forward(request, response);
+	    }
+	}
+
+	
+	public void doDeleteCategorie(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idCatParam = request.getParameter("categorie");
 		
 		int idCat= -1;
@@ -115,14 +149,11 @@ public class MyServlet extends HttpServlet implements Servlet {
 		Categorie cat = dao.getCatById(idCat);
 		
 		if (cat != null) {
-			Article article = new Article();
-			article.setCat(cat);
-			article.setDesignation(designation);
-			article.setPu(pu);
-			article.setQty(qty);
+			dao.deleteCat(cat);
 			
-			dao.addArticle(article);
-		}		
+			RequestDispatcher dispatcher = request.getRequestDispatcher("menuAdmin.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 	
 	

@@ -34,6 +34,7 @@
 		        <li class="nav-item dropdown">
 		          <a class="nav-link dropdown-toggle" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="false">Articles</a>
 		          <div class="dropdown-menu">
+		            <a class="dropdown-item" href="articles.jsp">Voir les articles</a>
 		            <a class="dropdown-item" href="#" onclick="showForm('addArticleForm')">Ajouter</a>
 		            <a class="dropdown-item" href="#" onclick="showForm('modifyArticleForm')">Modifier</a>
 		            <a class="dropdown-item" href="#" onclick="showForm('deleteArticleForm')">Supprimer</a>
@@ -62,7 +63,7 @@
 		</nav>
 	</header>
 	<main>
-		<form id="addArticleForm" style="display: none;" method="post" action="MyServlet?flag=addArticle">
+		<form id="addArticleForm" style="display: none;" method="post" action="MyServlet?flag=addArticle" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="designation" class="form-label">Désignation:</label>
                 <input type="text" class="form-control" name="designation" id="designation" required>
@@ -76,7 +77,7 @@
                 <input type="text" class="form-control" name="qty" id="qty" required>
             </div>
             <div>
-	            <label for="categorie" class="form-label">Categorie</label>
+	            <label for="categorie" class="form-label">Catégorie: </label>
 	            <select class="form-select" id="categorie" name="categorie">
 	            	<option value="">Selectionnez une catégorie</option>
 	                <%
@@ -92,6 +93,11 @@
 	            </select>
 	        </div>
 	        <br>
+	        <div class="mb-3">
+		        <label for="image" class="form-label">Image</label>
+		        <input type="file" class="form-control" name="image" id="image">
+		    </div>
+	        <br>
             <button class="btn btn-outline-success" type="submit">Envoyer</button>
             <button class="btn btn-outline-danger" type="reset">Reset</button>
         </form>
@@ -101,6 +107,25 @@
                 <label for="designation" class="form-label">Désignation:</label>
                 <input type="text" class="form-control" name="designation" id="designation" required>
             </div>
+            <button class="btn btn-outline-success" type="submit">Envoyer</button>
+            <button class="btn btn-outline-danger" type="reset">Reset</button>
+        </form>
+        
+        <form id="deleteCatForm" style="display: none;" method="post" action="MyServlet?flag=deleteCategorie">
+           <div>
+	            <label for="categorie" class="form-label">Catégorie: </label>
+	            <select class="form-select" id="categorie" name="categorie">
+	            	<option value="">Selectionnez une catégorie à supprimer</option>
+	                <%
+	                    for (Categorie cat : categories) {
+	                %>
+	                <option value="<%= cat.getIdCat() %>"><%= cat.getDesignation() %></option>
+	                <%
+	                    }
+	                %>
+	            </select>
+	        </div>
+	        <br>
             <button class="btn btn-outline-success" type="submit">Envoyer</button>
             <button class="btn btn-outline-danger" type="reset">Reset</button>
         </form>

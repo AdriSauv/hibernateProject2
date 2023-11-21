@@ -6,9 +6,49 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: fixed;
 }
 
 form {
 	width: 60%;
 	color: white;
 }
+/* Style for the container of article cards */
+.article-cards {
+	width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+/* Style for each individual article card */
+.article-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    overflow: hidden;
+    width: 200px;
+}
+
+/* Style for the article image */
+.article-image {
+    width: 100%;
+    max-height: 150px; /* Set a maximum height */
+    object-fit: cover;
+}
+
+/* Style for the details section of the article card */
+.article-details {
+    padding: 10px;
+}
+
+/* Style for the ID and title in the details section */
+.article-id,
+.article-title {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Add more styles as needed */

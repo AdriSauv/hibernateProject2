@@ -15,5 +15,6 @@
   <mapping class="org.eclipse.model.User"/>
   <mapping class="org.eclipse.model.Categorie"/>
   <mapping class="org.eclipse.model.Article"/>
+  <mapping class="org.eclipse.model.Image"/>
  </session-factory>
 </hibernate-configuration>

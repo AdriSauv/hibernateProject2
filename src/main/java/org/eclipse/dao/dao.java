@@ -10,6 +10,8 @@ import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public class dao {
 	
 	private static SessionFactory sf;
@@ -73,14 +75,14 @@ public class dao {
 		}
 	}
 
-	public List<User> getAllUsers() {
-        try (Session session = sf.openSession()) {
-            
-            List<User> userList = session.createQuery("FROM user").list();
-            
-            return userList;
-        }
-    }
+	public List<User> getAllUsers(HttpServletRequest request) {
+	    try (Session session = sf.openSession()) {
+	        List<User> userList = session.createQuery("FROM User").list();
+	        request.setAttribute("userList", userList);
+	        return userList;
+	    }
+	}
+
 	
 	public List<Categorie> getAllCat() {
         try (Session session = sf.openSession()) {
@@ -95,6 +97,14 @@ public class dao {
         }
     }
 
+	public List<Article> getAllArticles() {
+	    try (Session session = sf.openSession()) {
+	        List<Article> articleList = session.createQuery("FROM Article").list();
+	        return articleList;
+	    }
+	}
+
+
 	public Categorie getCatById(int idCat) {
         try (Session session = sf.openSession()) {
             Transaction tr = session.beginTransaction();
@@ -105,5 +115,18 @@ public class dao {
             return cat;
         }
     }
+
+	public void deleteCat(Categorie cat) {
+		try (Session session = sf.openSession()) {
+            Transaction tr = session.beginTransaction();
+            
+            session.delete(cat);
+            tr.commit();
+        } catch  (Exception e) {
+        	e.printStackTrace();
+        }
+	}
+
+	
 
 }
